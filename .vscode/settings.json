@@ -1,0 +1,34 @@
+{
+  "todohighlight.keywords": [
+    {
+      "text": "FIXME",
+      "color": "#333",
+      "backgroundColor": "#e67e22"
+    },
+    {
+      "text": "BUG",
+      "color": "#333",
+      "backgroundColor": "#e74c3c"
+    },
+    {
+      "text": "TODO",
+      "color": "#333",
+      "backgroundColor": "#2ecc71"
+    },
+    {
+      "text": "IMPORTANT",
+      "color": "#333",
+      "backgroundColor": "#FF0000"
+    },
+    {
+      "text": "MEDIUM",
+      "color": "#333",
+      "backgroundColor": "#ffea99"
+    },
+    {
+      "text": "MINOR",
+      "color": "#333",
+      "backgroundColor": "#68BBE3"
+    }
+  ]
+}
