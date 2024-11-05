@@ -13,10 +13,10 @@ const account1 = {
 };
 
 const account2 = {
-  owner: 'Jessica Davis',
+  owner: 'Chamod Tharuka',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
-  pin: 2222,
+  pin: 7777,
 };
 
 const account3 = {
@@ -33,6 +33,7 @@ const account4 = {
   pin: 4444,
 };
 
+// Array of objects
 const accounts = [account1, account2, account3, account4];
 
 // Elements
@@ -61,185 +62,130 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
+// Functions
+const displayMovements = movements => {
+  // Set containerMovements to empty
+  containerMovements.innerHTML = '';
 
-// const currencies = new Map([
-//   ['USD', 'United States dollar'],
-//   ['EUR', 'Euro'],
-//   ['GBP', 'Pound sterling'],
-// ]);
+  // Adding movements to containerMovements
+  movements.forEach(function (movement, i) {
+    const type = movement > 0 ? 'deposit' : 'withdrawal';
 
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+    const html = `
+        <div class="movements__row">
+          <div class="movements__type movements__type--${type}">
+          ${i + 1} ${type}
+          </div>
+          <div class="movements__value">${movement} €</div>
+        </div>
+        `;
 
-/////////////////////////////////////////////////
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
 
-/*
-//// SLICE ////
-let arr = ['a', 'b', 'c', 'd', 'e'];
+const calcDisplayBalance = movements => {
+  const balance = movements.reduce((acc, cur) => {
+    return acc + cur;
+  }, 0);
 
-console.log(arr.slice(2)); // (3) ['c', 'd', 'e']
-console.log(arr.slice(2, 4)); // (2) ['c', 'd'] --> length (4-2) = (2)
+  labelBalance.textContent = `${balance} €`;
+};
 
-// Negative begin parameter
-console.log(arr.slice(-1)); // ['e']
-console.log(arr.slice(-2)); // (2) ['d', 'e']
+const calcDisplaySummary = account => {
+  const { movements, interestRate } = account;
 
-// Negative end parameter
-console.log(arr.slice(1, -2)); // (2) ['b', 'c']
+  // Display income
+  const incomes = movements
+    .filter(movement => movement > 0)
+    .reduce((acc, cur) => {
+      return acc + cur;
+    }, 0);
+  labelSumIn.textContent = `${incomes} €`;
 
-// Shallow copy array
-console.log(arr.slice()); // (5) ['a', 'b', 'c', 'd', 'e']
-*/
+  // Display out
+  const out = movements
+    .filter(movement => movement < 0)
+    .reduce((acc, cur) => {
+      return acc + cur;
+    }, 0);
+  labelSumOut.textContent = `${Math.abs(out)} €`;
 
-//// SPLICE ////
-/*
-let arr = ['a', 'b', 'c', 'd', 'e'];
+  // Display interest
+  const interest = movements
+    .filter(movement => movement > 0)
+    .map(deposit => (deposit * interestRate) / 100)
+    .filter(intr => intr >= 1)
+    .reduce((acc, intr) => {
+      return acc + intr;
+    }, 0);
+  labelSumInterest.textContent = `${interest} €`;
+};
 
-console.log(arr.splice(-1)); // ['e'] delete last element
-console.log(arr); // (4) ['a', 'b', 'c', 'd']
+const createUsernames = accounts => {
+  // produce side effects
+  // do some work without returning anything
+  // add account.username property to account
+  accounts.forEach(account => {
+    account.username = account.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name.at(0))
+      .join('');
+  });
+};
 
-console.log(arr.splice(2)); // (2) ['c', 'd']
-console.log(arr); // (2) ['a', 'b']  extracted elements deleted from original array
+// Event handlers
+let currentAccount;
+let currentPin;
+createUsernames(accounts);
 
+btnLogin.addEventListener('click', e => {
+  e.preventDefault();
 
-// Delete count
-let arr = ['a', 'b', 'c', 'd', 'e'];
+  currentAccount = accounts.find(
+    account => account.username === inputLoginUsername.value
+  );
 
-console.log(arr.splice(1, 2)); // (2) ['b', 'c']
-console.log(arr); // (3) ['a', 'd', 'e']
-*/
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and message
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner
+      .split(' ')
+      .at(0)}`;
+    containerApp.style.opacity = 100;
 
-/*
-//// REVERSE ////
-const arr2 = ['j', 'i', 'h', 'g', 'f'];
+    // Clear the input fields
+    // equality operator works right to left
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
 
-console.log(arr2.reverse()); // (5) ['f', 'g', 'h', 'i', 'j']
-console.log(arr2); // (5) ['f', 'g', 'h', 'i', 'j'] mutate original arr2
-*/
+    // Display movements
+    displayMovements(currentAccount.movements);
 
-/*
-//// CONCAT ////
-const arr = ['a', 'b', 'c', 'd', 'e'];
-const arr2 = ['j', 'i', 'h', 'g', 'f'];
+    // Display balance
+    calcDisplayBalance(currentAccount.movements);
 
-const letters = arr.concat(arr2);
-console.log(letters); // (10) ['a', 'b', 'c', 'd', 'e', 'j', 'i', 'h', 'g', 'f']
-
-
-//// JOIN ////
-const arr = ['a', 'b', 'c', 'd', 'e'];
-
-console.log(arr);
-console.log(arr.join('-')); // a-b-c-d-e
-
-
-//// AT ////
-const arr = [23, 11, 64];
-
-console.log(arr.at(0)); // 23
-console.log(arr.at(-2)); // 11
-
-console.log('chamod'.at(0)); // c
-console.log('chamod'.at(-1)); // d
-*/
-
-/*
-////  Get last element of array ////
-const arr = [23, 11, 64];
-
-// BRACKET NOTATION
-console.log(arr[arr.length - 1]); // 64
-
-// SLICE
-console.log(arr.slice(-1)); // [64]
-console.log(arr.slice(-1)[0]); // 64
-
-// At
-console.log(arr.at(-1)); // 64
-*/
-
-//// forEach ////
-
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-// for of
-// for (const movement of movements) {
-// for (const [i, movement] of movements.entries()) {
-//   if (movement > 0) {
-//     console.log(`Movement ${i + 1}: You deposited ${movement}`);
-//   } else {
-//     console.log(`Movement ${i + 1}: You withdrew ${Math.abs(movement)}`);
-//   }
-// }
-
-/*
-Movement 1: You deposited 200
-Movement 2: You deposited 450
-Movement 3: You withdrew 400
-Movement 4: You deposited 3000
-Movement 5: You withdrew 650
-Movement 6: You withdrew 130
-Movement 7: You deposited 70
-Movement 8: You deposited 1300
-*/
-// console.log('---forEach---');
-
-// forEach
-// movements.forEach(function (movement) {
-// movements.forEach(function (movement, index, array) {
-//   if (movement > 0) {
-//     console.log(`Movement ${index + 1}: You deposited ${movement}`);
-//   } else {
-//     console.log(`Movement ${index + 1}: You withdrew ${Math.abs(movement)}`);
-//   }
-// });
-
-// 0: function(200, 0, arr)
-// 1: function(450, 1, arr)
-// 2: function(400, 2, arr)
-// ...
-
-/*
-Movement 1: You deposited 200
-Movement 2: You deposited 450
-Movement 3: You withdrew 400
-Movement 4: You deposited 3000
-Movement 5: You withdrew 650
-Movement 6: You withdrew 130
-Movement 7: You deposited 70
-Movement 8: You deposited 1300
-*/
-
-//// forEach with Maps
-const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
-]);
-
-// Map
-currencies.forEach(function (value, key, map) {
-  console.log(`${key}: ${value}`);
+    // DIsplay summary
+    calcDisplaySummary(currentAccount);
+  } else {
+    inputLoginUsername.value = inputLoginPin.value = '';
+    alert('username or pin incorrect!');
+  }
 });
 
-/*
-USD: United States dollar
-script.js:223 EUR: Euro
-script.js:223 GBP: Pound sterling
-*/
+// const euroToUsd = 1.1;
+// const calcDepositsUsd = movements => {
+//   const totalDepositsUsd = movements
+//     .filter(movement => movement > 0)
+//     .map(movement => movement * euroToUsd)
+//     .reduce((acc, dep) => {
+//       return acc + dep;
+//     }, 0);
 
-// Set
-const currenciesUnique = new Set(['USD', 'EUR', 'GBP', 'USD', 'EUR', 'EUR']);
-console.log(currenciesUnique); // Set(3) {'USD', 'EUR', 'GBP'}
+//   return totalDepositsUsd;
+// };
 
-currenciesUnique.forEach(function (value, _, map) {
-  console.log(`${value}`);
-});
+// console.log(calcDepositsUsd(account1.movements));
 
-/*
-USD
-EUR
-GBP
-*/
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
