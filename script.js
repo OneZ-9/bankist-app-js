@@ -62,6 +62,7 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+/////////////////////////////////////////////////
 // Functions
 const displayMovements = movements => {
   // Set containerMovements to empty
@@ -84,12 +85,14 @@ const displayMovements = movements => {
   });
 };
 
-const calcDisplayBalance = movements => {
-  const balance = movements.reduce((acc, cur) => {
+const calcDisplayBalance = account => {
+  const { movements } = account;
+
+  account.balance = movements.reduce((acc, cur) => {
     return acc + cur;
   }, 0);
 
-  labelBalance.textContent = `${balance} €`;
+  labelBalance.textContent = `${account.balance} €`;
 };
 
 const calcDisplaySummary = account => {
@@ -135,6 +138,18 @@ const createUsernames = accounts => {
   });
 };
 
+const updateUI = account => {
+  // Display movements
+  displayMovements(account.movements);
+
+  // Display balance
+  calcDisplayBalance(account);
+
+  // DIsplay summary
+  calcDisplaySummary(account);
+};
+
+/////////////////////////////////////////////////
 // Event handlers
 let currentAccount;
 let currentPin;
@@ -156,36 +171,46 @@ btnLogin.addEventListener('click', e => {
 
     // Clear the input fields
     // equality operator works right to left
-    inputLoginUsername.value = inputLoginPin.value = '';
+    // inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
-    // Display movements
-    displayMovements(currentAccount.movements);
-
-    // Display balance
-    calcDisplayBalance(currentAccount.movements);
-
-    // DIsplay summary
-    calcDisplaySummary(currentAccount);
+    updateUI(currentAccount);
   } else {
-    inputLoginUsername.value = inputLoginPin.value = '';
     alert('username or pin incorrect!');
   }
+  inputLoginUsername.value = inputLoginPin.value = '';
 });
 
-// const euroToUsd = 1.1;
-// const calcDepositsUsd = movements => {
-//   const totalDepositsUsd = movements
-//     .filter(movement => movement > 0)
-//     .map(movement => movement * euroToUsd)
-//     .reduce((acc, dep) => {
-//       return acc + dep;
-//     }, 0);
+btnTransfer.addEventListener('click', e => {
+  e.preventDefault();
 
-//   return totalDepositsUsd;
-// };
+  const amount = Number(inputTransferAmount.value);
+  const receiverAccount = accounts.find(
+    account => account.username === inputTransferTo.value
+  );
 
-// console.log(calcDepositsUsd(account1.movements));
+  if (
+    receiverAccount &&
+    amount > 0 &&
+    currentAccount.balance >= amount &&
+    receiverAccount?.username !== currentAccount.username
+  ) {
+    // Transaction
+    receiverAccount.movements.push(amount);
+    currentAccount.movements.push(-amount);
+    // Update UI
+    updateUI(currentAccount);
+    // Notify user
+    alert(
+      `Successfuly transferred amount ${amount} to ${receiverAccount.owner
+        .split(' ')
+        .at(0)}`
+    );
+  } else {
+    alert('Cannot find the user to transfer!');
+  }
+  inputTransferTo.value = inputTransferAmount.value = '';
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////

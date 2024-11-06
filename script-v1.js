@@ -319,3 +319,17 @@ length: 4
 // const account = accounts.find(acc => acc.owner === 'Chamod Tharuka');
 // console.log(account);
 // {owner: 'Chamod Tharuka', movements: Array(8), interestRate: 1.5, pin: 2222}
+
+// const euroToUsd = 1.1;
+// const calcDepositsUsd = movements => {
+//   const totalDepositsUsd = movements
+//     .filter(movement => movement > 0)
+//     .map(movement => movement * euroToUsd)
+//     .reduce((acc, dep) => {
+//       return acc + dep;
+//     }, 0);
+
+//   return totalDepositsUsd;
+// };
+
+// console.log(calcDepositsUsd(account1.movements));
