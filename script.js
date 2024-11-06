@@ -155,6 +155,7 @@ let currentAccount;
 let currentPin;
 createUsernames(accounts);
 
+// Login
 btnLogin.addEventListener('click', e => {
   e.preventDefault();
 
@@ -181,6 +182,7 @@ btnLogin.addEventListener('click', e => {
   inputLoginUsername.value = inputLoginPin.value = '';
 });
 
+// Transfer amount
 btnTransfer.addEventListener('click', e => {
   e.preventDefault();
 
@@ -210,6 +212,36 @@ btnTransfer.addEventListener('click', e => {
     alert('Cannot find the user to transfer!');
   }
   inputTransferTo.value = inputTransferAmount.value = '';
+});
+
+// Close account
+btnClose.addEventListener('click', e => {
+  e.preventDefault();
+
+  const closeUsername = inputCloseUsername.value;
+  const closePin = Number(inputClosePin.value);
+  const closeAccountIndex = accounts.findIndex(
+    acc => acc.username === closeUsername
+  );
+
+  if (
+    closeUsername === currentAccount.username &&
+    closePin === currentAccount.pin &&
+    closeAccountIndex !== -1
+  ) {
+    // Delete account
+    accounts.splice(closeAccountIndex, 1);
+
+    // Hide UI
+    containerApp.style.opacity = 0;
+
+    alert(`User ${closeUsername} has successfully deleted!`);
+  } else {
+    alert('Incorrect username & pin or user has been already deleted');
+  }
+  inputCloseUsername.value = inputClosePin.value = '';
+
+  console.log(accounts);
 });
 
 /////////////////////////////////////////////////
