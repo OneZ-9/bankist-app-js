@@ -64,6 +64,9 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
+const deposits = movement => movement > 0;
+const withdrawals = movement => movement < 0;
+
 const displayMovements = movements => {
   // Set containerMovements to empty
   containerMovements.innerHTML = '';
@@ -99,24 +102,20 @@ const calcDisplaySummary = account => {
   const { movements, interestRate } = account;
 
   // Display income
-  const incomes = movements
-    .filter(movement => movement > 0)
-    .reduce((acc, cur) => {
-      return acc + cur;
-    }, 0);
+  const incomes = movements.filter(deposits).reduce((acc, cur) => {
+    return acc + cur;
+  }, 0);
   labelSumIn.textContent = `${incomes} €`;
 
   // Display out
-  const out = movements
-    .filter(movement => movement < 0)
-    .reduce((acc, cur) => {
-      return acc + cur;
-    }, 0);
+  const out = movements.filter(withdrawals).reduce((acc, cur) => {
+    return acc + cur;
+  }, 0);
   labelSumOut.textContent = `${Math.abs(out)} €`;
 
   // Display interest
   const interest = movements
-    .filter(movement => movement > 0)
+    .filter(deposits)
     .map(deposit => (deposit * interestRate) / 100)
     .filter(intr => intr >= 1)
     .reduce((acc, intr) => {
@@ -155,7 +154,7 @@ let currentAccount;
 let currentPin;
 createUsernames(accounts);
 
-// Login
+///////////////////////////////////// Login ////////////////////////////////
 btnLogin.addEventListener('click', e => {
   e.preventDefault();
 
@@ -182,7 +181,7 @@ btnLogin.addEventListener('click', e => {
   inputLoginUsername.value = inputLoginPin.value = '';
 });
 
-// Transfer amount
+////////////////////////////////// Transfer amount  //////////////////////////////////////
 btnTransfer.addEventListener('click', e => {
   e.preventDefault();
 
@@ -214,7 +213,28 @@ btnTransfer.addEventListener('click', e => {
   inputTransferTo.value = inputTransferAmount.value = '';
 });
 
-// Close account
+///////////////////////////////////// Request Loan ////////////////////////////////////
+// User can request loan if has any deposit > 10% of request
+btnLoan.addEventListener('click', e => {
+  e.preventDefault();
+
+  const loanAmount = Number(inputLoanAmount.value);
+
+  if (
+    loanAmount > 0 &&
+    currentAccount.movements.some(mov => mov >= loanAmount * 0.1)
+  ) {
+    currentAccount.movements.push(loanAmount);
+    alert('Loan proceed successfully!');
+    updateUI(currentAccount);
+  } else {
+    alert('Cannot proceed loan');
+  }
+
+  inputLoanAmount.value = '';
+});
+
+//////////////////////////////////// Close account ///////////////////////////////////
 btnClose.addEventListener('click', e => {
   e.preventDefault();
 
@@ -229,7 +249,7 @@ btnClose.addEventListener('click', e => {
     closePin === currentAccount.pin &&
     closeAccountIndex !== -1
   ) {
-    // Delete account
+    // Delete from array
     accounts.splice(closeAccountIndex, 1);
 
     // Hide UI

@@ -333,3 +333,24 @@ length: 4
 // };
 
 // console.log(calcDepositsUsd(account1.movements));
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+//// Includes method
+console.log(movements.includes(-400)); // true
+console.log(movements.includes(400)); // false
+
+//// Some method
+const anyDeposits = movements.some(movement => movement > 0);
+console.log(anyDeposits); // true
+
+const anyDepositsAbove5000 = movements.some(movement => movement > 5000);
+console.log(anyDepositsAbove5000); // false
+
+//// Every method
+
+const isAllDeposits = movements.every(movement => movement > 0);
+console.log(isAllDeposits); // false
+
+const isAllDepositsAcc4 = account4.movements.every(movement => movement > 0);
+console.log(isAllDepositsAcc4); // true
