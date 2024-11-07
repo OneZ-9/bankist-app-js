@@ -334,23 +334,83 @@ length: 4
 
 // console.log(calcDepositsUsd(account1.movements));
 
+/*
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-//// Includes method
+//// Includes method ////
 console.log(movements.includes(-400)); // true
 console.log(movements.includes(400)); // false
 
-//// Some method
+//// Some method ////
 const anyDeposits = movements.some(movement => movement > 0);
 console.log(anyDeposits); // true
 
 const anyDepositsAbove5000 = movements.some(movement => movement > 5000);
 console.log(anyDepositsAbove5000); // false
 
-//// Every method
+//// Every method ////
 
 const isAllDeposits = movements.every(movement => movement > 0);
 console.log(isAllDeposits); // false
 
 const isAllDepositsAcc4 = account4.movements.every(movement => movement > 0);
 console.log(isAllDepositsAcc4); // true
+*/
+
+//// Flat method ////
+// const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+// const flatArr = arr.flat();
+// console.log(flatArr); // (8) [1, 2, 3, 4, 5, 6, 7, 8]
+
+// const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+
+// const flatArrDeep = arrDeep.flat();
+// const flatArrDeep2 = arrDeep.flat(2);
+
+// console.log(flatArrDeep); // (6) [Array(2), 3, 4, Array(2), 7, 8]
+// console.log(flatArrDeep2); // (8) [1, 2, 3, 4, 5, 6, 7, 8]
+
+// //// flatMap method ////
+// const overallBalance = accounts
+//   .map(account => account.movements)
+//   .flat()
+//   .reduce((acc, mov) => acc + mov, 0);
+// console.log(overallBalance); // 17840
+
+// const overallBalance2 = accounts
+//   .flatMap(account => account.movements)
+//   .reduce((acc, mov) => acc + mov, 0);
+
+// console.log(overallBalance2); // 17840
+
+//// Sort method ////
+const owners = ['Jonas', 'Chamod', 'Zach', 'Adam'];
+
+console.log(owners.sort()); // (4) ['Adam', 'Chamod', 'Jonas', 'Zach']
+console.log(owners); // (4) ['Adam', 'Chamod', 'Jonas', 'Zach']
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// on numbers, sort will not give the result we expected by defualt
+// console.log(movements.sort()); // (8) [-130, -400, -650, 1300, 200, 3000, 450, 70]
+// console.log(movements); // (8) [-130, -400, -650, 1300, 200, 3000, 450, 70]
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// Ascending order
+// movements.sort((a, b) => {
+//   if (a > b) return 1;
+//   if (a < b) return -1;
+// });
+movements.sort((a, b) => a - b);
+
+console.log(movements); // (8) [-650, -400, -130, 70, 200, 450, 1300, 3000]
+
+// Descending order
+// movements.sort((a, b) => {
+//   if (a > b) return -1;
+//   if (a < b) return 1;
+// });
+movements.sort((a, b) => b - a);
+
+console.log(movements); // (8) [3000, 1300, 450, 200, 70, -130, -400, -650]
