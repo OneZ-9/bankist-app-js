@@ -274,6 +274,7 @@ btnSort.addEventListener('click', e => {
   sorted = !sorted;
 });
 
+// Get all the movements from UI and create an array
 labelBalance.addEventListener('click', () => {
   const movementsUI = Array.from(
     document.querySelectorAll('.movements__value'),
@@ -299,6 +300,55 @@ labelBalance.addEventListener('click', () => {
 length: 8
   */
 });
+
+// Calc the sum of deposits and withdrawals from all account movements
+// const sums = accounts.map(account => account.movements).flat();
+const sums = accounts
+  .flatMap(account => account.movements)
+  .reduce(
+    (sum, mov) => {
+      // mov > 0 ? (sum.deposits += mov) : (sum.withdrawals += mov);
+      sum[mov > 0 ? 'deposits' : 'withdrawals'] += mov;
+
+      return sum;
+    },
+    { deposits: 0, withdrawals: 0 }
+  );
+
+console.log(sums); // {deposits: 25180, withdrawals: -7340}
+
+// Convert Title
+const convertTitleCase = title => {
+  const capitalize = word => {
+    return word.at(0).toUpperCase() + word.slice(1);
+  };
+
+  const exceptions = [
+    'a',
+    'is',
+    'an',
+    'and',
+    'the',
+    'but',
+    'or',
+    'on',
+    'of',
+    'in',
+    'with',
+  ];
+
+  const convertedTitle = title
+    .toLowerCase()
+    .split(' ')
+    .map(word => (exceptions.includes(word) ? word : capitalize(word)))
+    .join(' ');
+
+  return capitalize(convertedTitle);
+};
+
+console.log(convertTitleCase('and this is a nice title'));
+console.log(convertTitleCase("Don't do it!"));
+console.log(convertTitleCase('This is a LONG title, and not TOO Long!'));
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
