@@ -384,6 +384,7 @@ console.log(isAllDepositsAcc4); // true
 // console.log(overallBalance2); // 17840
 
 //// Sort method ////
+/*
 const owners = ['Jonas', 'Chamod', 'Zach', 'Adam'];
 
 console.log(owners.sort()); // (4) ['Adam', 'Chamod', 'Jonas', 'Zach']
@@ -414,3 +415,39 @@ console.log(movements); // (8) [-650, -400, -130, 70, 200, 450, 1300, 3000]
 movements.sort((a, b) => b - a);
 
 console.log(movements); // (8) [3000, 1300, 450, 200, 70, -130, -400, -650]
+*/
+
+//// Create arrays programmatically ////
+// 1. Array constructor
+
+/*
+const x = new Array(7);
+console.log(x); // (7) [empty × 7]
+
+// x.fill(1);
+// console.log(x); // (7) [1, 1, 1, 1, 1, 1, 1]
+
+x.fill(1, 3, 5);
+console.log(x); // (7) [empty × 3, 1, 1, empty × 2]
+
+const arr = [1, 2, 3, 4, 5, 6, 7];
+
+arr.fill(23, 4, 6);
+console.log(arr); // (7) [1, 2, 3, 4, 23, 23, 7]
+
+//// Array.from()
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y); // (7) [1, 1, 1, 1, 1, 1, 1]
+
+const z = Array.from({ length: 7 }, (cur, i) => i + 1);
+console.log(z); // (7) [1, 2, 3, 4, 5, 6, 7]
+
+
+// 100 Random dice rolls
+function rollingDice() {
+  return Math.trunc(Math.random() * 6) + 1;
+}
+
+const diceRolls = Array.from({ length: 100 }, rollingDice);
+console.log(diceRolls);
+*/

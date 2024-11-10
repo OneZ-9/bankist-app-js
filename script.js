@@ -274,5 +274,31 @@ btnSort.addEventListener('click', e => {
   sorted = !sorted;
 });
 
+labelBalance.addEventListener('click', () => {
+  const movementsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => {
+      return Number(el.textContent.replace('€', ''));
+    }
+  );
+
+  console.log(movementsUI); // (8) [-30, 8500, -1000, -3210, -790, -150, 3400, 5000]
+
+  const movementsUI2 = [...document.querySelectorAll('.movements__value')];
+
+  console.log(movementsUI2);
+  /*
+0: div.movements__value
+1: div.movements__value
+2: div.movements__value
+3: div.movements__value
+4: div.movements__value
+5: div.movements__value
+6: div.movements__value
+7: div.movements__value
+length: 8
+  */
+});
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
